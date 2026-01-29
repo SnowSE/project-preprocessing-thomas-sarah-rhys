@@ -16,6 +16,14 @@ print(df.describe())
 print(df.isnull().sum())
 
 # Target Distribution (Loneliness)
+
+print("\n--- Village - town value counts ---")
+print(df["Village - town"].value_counts())
+
+print("\n--- Internet usage value counts ---")
+print(df["Internet usage"].value_counts())
+
+
 plt.figure(figsize=(8, 5))
 sns.countplot(x='Loneliness', data=df, color='skyblue')
 plt.title('Target Distribution: Loneliness Levels', fontsize=12)
