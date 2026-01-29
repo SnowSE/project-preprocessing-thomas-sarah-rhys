@@ -28,7 +28,14 @@ plt.savefig('target_distribution.png')
 #################################################
 # Part 2: Exploratory Data Analysis (EDA)
 #################################################
+# Select numeric columns, drop ID, and add jitter
+df_viz = df.select_dtypes(include=[np.number]).drop(columns=['Unnamed: 0'])
+df_viz += np.random.uniform(-0.5, 0.5, df_viz.shape)
+# sns.pairplot(data=df_viz)
+# plt.savefig('pairplot.png')
 
+sns.PairGrid(data=df_viz).map_upper(sns.scatterplot).map_lower(sns.kdeplot).map_diag(sns.histplot)
+plt.savefig('kde_histplot_pairplot.png')
 
 #################################################
 # Part 3: Data Preprocessing
