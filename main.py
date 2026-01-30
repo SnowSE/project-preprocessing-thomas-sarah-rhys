@@ -35,6 +35,7 @@ print(df["Internet usage"].value_counts())
 #################################################
 # Part 2: Exploratory Data Analysis (EDA)
 #################################################
+
 # # pairplot with jitter
 # df_viz = df.select_dtypes(include=[np.number]).drop(columns=['Unnamed: 0'])
 # df_viz += np.random.uniform(-0.5, 0.5, df_viz.shape)
@@ -62,18 +63,12 @@ n_cols = len(numeric_cols.columns)
 n_rows = (n_cols + 2) // 3
 fig, axes = plt.subplots(n_rows, 3, figsize=(18, n_rows * 4))
 axes = axes.flatten()
-
 for idx, col in enumerate(numeric_cols.columns):
     if col != 'Loneliness':
         sns.boxplot(x='Loneliness', y=col, data=df, ax=axes[idx], hue='Loneliness', palette='Set2', legend=False)
         axes[idx].set_title(f'Box Plot: {col} by Loneliness', fontsize=10)
         axes[idx].set_xlabel('Loneliness Level', fontsize=9)
         axes[idx].set_ylabel(col, fontsize=9)
-
-# Remove extra subplots
-for idx in range(len(numeric_cols.columns), len(axes)):
-    fig.delaxes(axes[idx])
-
 plt.tight_layout()
 plt.savefig('figures/boxplots_by_loneliness.png', dpi=300, bbox_inches='tight')
 plt.close()
@@ -81,18 +76,12 @@ plt.close()
 # Violin Plots grouped by Loneliness Level
 fig, axes = plt.subplots(n_rows, 3, figsize=(18, n_rows * 4))
 axes = axes.flatten()
-
 for idx, col in enumerate(numeric_cols.columns):
     if col != 'Loneliness':
         sns.violinplot(x='Loneliness', y=col, data=df, ax=axes[idx], hue='Loneliness', palette='Set3', legend=False)
         axes[idx].set_title(f'Violin Plot: {col} by Loneliness', fontsize=10)
         axes[idx].set_xlabel('Loneliness Level', fontsize=9)
         axes[idx].set_ylabel(col, fontsize=9)
-
-# Remove extra subplots
-for idx in range(len(numeric_cols.columns), len(axes)):
-    fig.delaxes(axes[idx])
-
 plt.tight_layout()
 plt.savefig('figures/violinplots_by_loneliness.png', dpi=300, bbox_inches='tight')
 plt.close()
