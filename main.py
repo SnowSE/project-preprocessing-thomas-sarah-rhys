@@ -36,14 +36,28 @@ plt.savefig('target_distribution.png')
 #################################################
 # Part 2: Exploratory Data Analysis (EDA)
 #################################################
-# Select numeric columns, drop ID, and add jitter
-df_viz = df.select_dtypes(include=[np.number]).drop(columns=['Unnamed: 0'])
-df_viz += np.random.uniform(-0.5, 0.5, df_viz.shape)
+# pairplot with jitter
+# df_viz = df.select_dtypes(include=[np.number]).drop(columns=['Unnamed: 0'])
+# df_viz += np.random.uniform(-0.5, 0.5, df_viz.shape)
 # sns.pairplot(data=df_viz)
 # plt.savefig('pairplot.png')
 
-sns.PairGrid(data=df_viz).map_upper(sns.scatterplot).map_lower(sns.kdeplot).map_diag(sns.histplot)
-plt.savefig('kde_histplot_pairplot.png')
+# Pair grid with regplot and kde plot
+# sns.PairGrid(data=df).map_upper(sns.regplot).map_lower(sns.kdeplot).map_diag(sns.histplot)
+# plt.savefig('kde_histplot_pairplot.png')
+
+# Correlation Heatmap
+plt.figure(figsize=(20, 16))
+numeric_cols = df.select_dtypes(include=[np.number]).drop(columns=['Unnamed: 0'])
+correlation_matrix = numeric_cols.corr()
+sns.heatmap(correlation_matrix, annot=True, fmt='.2f', cmap='coolwarm', 
+            center=0, square=True, linewidths=0.5, cbar_kws={"shrink": 0.8})
+plt.title('Correlation Heatmap of Numeric Variables', fontsize=14, pad=20)
+plt.tight_layout()
+plt.savefig('correlation_heatmap.png', dpi=300, bbox_inches='tight')
+plt.close()
+
+
 
 #################################################
 # Part 3: Data Preprocessing
