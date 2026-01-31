@@ -40,8 +40,32 @@ plt.savefig('figures/initial-exploration/target_distribution.png')
 
 # Drop specified columns
 df = df.drop(columns=['Unnamed: 0', 'Music', "Parents' advice", 'Techno', 'Siblings'])
+# Key Numeric Variables: Movies, History, Mathematics, Pets, Spiders, Loneliness, Finances, Age
+# Key Categorical Variables: Internet usage, Gender, Village - town
+
 
 # 1. Univariate Analysis
+key_numeric = ['Movies', 'History', 'Mathematics', 'Pets', 'Spiders', 'Loneliness', 'Finances', 'Age']
+for col in key_numeric:
+    plt.figure(figsize=(8, 5))
+    sns.countplot(x=col, data=df, color='skyblue')
+    plt.title(f'{col} Distribution', fontsize=12)
+    plt.xlabel(col, fontsize=10)
+    plt.ylabel('Count', fontsize=10)
+    sns.despine()
+    plt.savefig(f'figures/eda/numeric_{col.lower()}_distribution.png')
+    plt.close()
+
+key_categorical = ['Internet usage', 'Gender', 'Village - town']
+for col in key_categorical:
+    plt.figure(figsize=(8, 5))
+    sns.countplot(x=col, data=df, color='coral')
+    plt.title(f'{col} Distribution', fontsize=12)
+    plt.xlabel(col, fontsize=10)
+    plt.ylabel('Count', fontsize=10)
+    sns.despine()
+    plt.savefig(f'figures/eda/categorical_{col.lower().replace(" ", "_").replace(" - ", "_")}_distribution.png')
+    plt.close()
 
 
 # 2. Multivariate Analysis
