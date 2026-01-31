@@ -15,16 +15,18 @@ print(df.head())
 print(df.info())
 print(df.describe())
 
+# 2. Initial Data Quality
+# Table of null value counts
 print(df.isnull().sum())
 
-# 2. Initial Data Quality
-# Target Distribution (Loneliness)
+# Value counts for important categorical variables
 print("\n--- Village - town value counts ---")
 print(df["Village - town"].value_counts())
 
 print("\n--- Internet usage value counts ---")
 print(df["Internet usage"].value_counts())
 
+# Target Distribution (Loneliness)
 plt.figure(figsize=(8, 5))
 sns.countplot(x='Loneliness', data=df, color='skyblue')
 plt.title('Target Distribution: Loneliness Levels', fontsize=12)
@@ -42,10 +44,12 @@ plt.savefig('figures/initial-exploration/target_distribution.png')
 df = df.drop(columns=['Unnamed: 0', 'Music', "Parents' advice", 'Techno', 'Siblings'])
 # Key Numeric Variables: Movies, History, Mathematics, Pets, Spiders, Loneliness, Finances, Age
 # Key Categorical Variables: Internet usage, Gender, Village - town
+key_numeric = ['Movies', 'History', 'Mathematics', 'Pets', 'Spiders', 'Loneliness', 'Finances', 'Age']
+key_categorical = ['Internet usage', 'Gender', 'Village - town']
 
 
 # 1. Univariate Analysis
-key_numeric = ['Movies', 'History', 'Mathematics', 'Pets', 'Spiders', 'Loneliness', 'Finances', 'Age']
+# Numerical Histograms to show 
 for col in key_numeric:
     plt.figure(figsize=(8, 5))
     sns.countplot(x=col, data=df, color='skyblue')
@@ -56,7 +60,7 @@ for col in key_numeric:
     plt.savefig(f'figures/eda/numeric_{col.lower()}_distribution.png')
     plt.close()
 
-key_categorical = ['Internet usage', 'Gender', 'Village - town']
+# Categorical histograms to show frequency distribution
 for col in key_categorical:
     plt.figure(figsize=(8, 5))
     sns.countplot(x=col, data=df, color='coral')
@@ -70,23 +74,33 @@ for col in key_categorical:
 
 # 2. Multivariate Analysis
 # Box Plots grouped by Loneliness Level
-numeric_cols = df.select_dtypes(include=[np.number])
-n_cols = len(numeric_cols.columns)
-n_rows = (n_cols + 2) // 3
-fig, axes = plt.subplots(n_rows, 3, figsize=(18, n_rows * 4))
+plot_cols = [col for col in key_numeric if col != 'Loneliness']
+rows_of_figs = (len(plot_cols) + 2) // 3
+fig, axes = plt.subplots(rows_of_figs, 3, figsize=(18, rows_of_figs * 4))
 axes = axes.flatten()
-for idx, col in enumerate(numeric_cols.columns):
-    if col != 'Loneliness':
-        sns.boxplot(x='Loneliness', y=col, data=df, ax=axes[idx], hue='Loneliness', palette='Set2', legend=False)
-        axes[idx].set_title(f'Box Plot: {col} by Loneliness', fontsize=10)
-        axes[idx].set_xlabel('Loneliness Level', fontsize=9)
-        axes[idx].set_ylabel(col, fontsize=9)
+for idx, col in enumerate(plot_cols):
+    sns.boxplot(x='Loneliness', y=col, data=df, ax=axes[idx], hue='Loneliness', palette='Set2', legend=False)
+    axes[idx].set_title(f'Box Plot: {col} by Loneliness', fontsize=10)
+    axes[idx].set_xlabel('Loneliness Level', fontsize=9)
+    axes[idx].set_ylabel(col, fontsize=9)
 plt.tight_layout()
 plt.savefig('figures/eda/boxplots_by_loneliness.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-# 3. Correlation Analysis
+# Bar Charts: Frequency Distributions by Loneliness Level
+fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+for idx, col in enumerate(key_categorical):
+    sns.countplot(x=col, hue='Loneliness', data=df, ax=axes[idx], palette='Set2')
+    axes[idx].set_title(f'{col} by Loneliness Level', fontsize=11)
+    axes[idx].set_xlabel(col, fontsize=10)
+    axes[idx].set_ylabel('Count', fontsize=10)
+    axes[idx].legend(title='Loneliness', fontsize=8, title_fontsize=9)
+plt.tight_layout()
+plt.savefig('figures/eda/categorical_by_loneliness.png', dpi=300, bbox_inches='tight')
+plt.close()
 
+
+# 3. Correlation Analysis
 # Correlation Heatmap
 plt.figure(figsize=(20, 16))
 numeric_cols = df.select_dtypes(include=[np.number])
